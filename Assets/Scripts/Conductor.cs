@@ -106,14 +106,6 @@ public class Conductor : MonoBehaviour
 			}
 		}
 		
-		
-		/*foreach (var interval in _intervals)
-		{
-			float sampledTime = _audioSource.timeSamples/(_audioSource.clip.frequency*interval.GetIntervalLength());
-			interval.CheckForNewInterval(sampledTime);
-		}
-		float sample = (_audioSource.timeSamples/(_audioSource.clip.frequency*_intervals[(int)_timeSignature.BeatType].GetIntervalLength()));
-		CurrentBeatFraction = sample%1 ;*/
 	}
 
 	private void KeepTime(ConductorEventArgs eventArgs)
