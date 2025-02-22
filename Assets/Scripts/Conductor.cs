@@ -38,6 +38,7 @@ public class Conductor : MonoBehaviour
 	private static int CurrentMeasure {get; set;}
 	private static int CurrentBeat {get; set;}
 	private static float CurrentBeatFraction {get; set;}
+	private static TimeSignature CurrentTimeSignature {get; set;}
 	
 	
 
@@ -86,6 +87,7 @@ public class Conductor : MonoBehaviour
 		CurrentMeasure = 1;
 		CurrentBeat = 1;
 		CurrentBeatFraction = 0;
+		CurrentTimeSignature = _timeSignature;
 		
 		_intervals[(int)_timeSignature.BeatType].Register(KeepTime);
 	}
@@ -131,12 +133,14 @@ public class Conductor : MonoBehaviour
     	public int BarNumber;
     	public int Beat;
     	public float BeatFraction;
+	    public TimeSignature TimeSignature;
 
-	    public ConductorEventArgs(int barNumber, int beat, float beatFraction)
+	    public ConductorEventArgs(int barNumber, int beat, float beatFraction, TimeSignature timeSignature)
 	    {
 		    BarNumber = barNumber;
 		    Beat = beat;
 		    BeatFraction = beatFraction;
+		    TimeSignature = timeSignature;
 	    }
     }
 
@@ -208,8 +212,8 @@ public class Conductor : MonoBehaviour
 		       if (Mathf.FloorToInt(interval) != _lastInterval)
 		       {
 			       _lastInterval = Mathf.FloorToInt(interval);
-			       _action.Invoke(new ConductorEventArgs(CurrentMeasure,CurrentBeat,CurrentBeatFraction));
-			       _oneShots.Invoke(new ConductorEventArgs(CurrentMeasure,CurrentBeat,CurrentBeatFraction));
+			       _action.Invoke(new ConductorEventArgs(CurrentMeasure,CurrentBeat,CurrentBeatFraction,CurrentTimeSignature));
+			       _oneShots.Invoke(new ConductorEventArgs(CurrentMeasure,CurrentBeat,CurrentBeatFraction,CurrentTimeSignature));
 			       _oneShots = delegate { };
 		       } 
      	}
