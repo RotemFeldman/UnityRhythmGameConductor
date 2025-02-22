@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+#if USE_FMOD
+using FMODUnity;
+using FMOD.Studio;
+#endif
+//todo integrate fmod seamless
+
 [RequireComponent(typeof(AudioSource))]
 public class Conductor : MonoBehaviour
 {
