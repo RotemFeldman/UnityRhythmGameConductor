@@ -16,7 +16,7 @@ namespace DefaultNamespace
 		public Conductor.NoteValue note;
 		public AudioSource audioClip;
 
-		private void Start()
+		private void Start()	
 		{
 			spriteRenderer = GetComponent<Image>();
 			startColor = spriteRenderer.color;
@@ -24,10 +24,10 @@ namespace DefaultNamespace
 			Conductor.Instance.Register(note,Change);
 		}
 
-		private void Change()
+		private void Change(Conductor.ConductorEventArgs args)
 		{
+			//print($"Measure:{args.BarNumber}, Beat:{args.Beat}");
 			transform.localScale =startSize* sizeDiff;
-			//spriteRenderer.color = Color.white - startColor;
 		}
 
 		private void Update()
@@ -45,7 +45,7 @@ namespace DefaultNamespace
 			Conductor.Instance.Register(note,Bar,true);
 		}
 		
-		private void Bar()
+		private void Bar(Conductor.ConductorEventArgs args)
 		{
 			spriteRenderer.color = Color.black;
 			audioClip?.Play();

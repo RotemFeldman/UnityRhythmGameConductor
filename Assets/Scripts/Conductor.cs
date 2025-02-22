@@ -7,10 +7,13 @@ using UnityEngine;
 public class Conductor : MonoBehaviour
 {
 	public static Conductor Instance;
-	
+
+	// user settings
+	[SerializeField] private TimeSignature _timeSignature;
 	[SerializeField] private float _bpm;
 	[SerializeField] private AudioSource _audioSource;
 
+	//inner working
 	private Interval[] _intervals;
 	private static readonly Dictionary<NoteValue, float> NoteValues = new Dictionary<NoteValue, float>()
 	{
@@ -19,6 +22,7 @@ public class Conductor : MonoBehaviour
 		{ NoteValue.Quarter, 1f },
 		{ NoteValue.Eighth, 2f },
 		{ NoteValue.Sixteenth, 4f },
+		{ NoteValue.ThirtySecond ,8f}
 	};
 	public enum NoteValue
 	{
@@ -27,16 +31,22 @@ public class Conductor : MonoBehaviour
 		Quarter ,
 		Eighth ,
 		Sixteenth ,
+		ThirtySecond ,
 	}
+	
+	//data
+	private static int CurrentMeasure {get; set;}
+	private static int CurrentBeat {get; set;}
+	private static float CurrentBeatFraction {get; set;}
 	
 	
 
-	public void Register(NoteValue note, Action callback,bool isOneShot = false)
+	public void Register(NoteValue note, Action<ConductorEventArgs> callback,bool isOneShot = false)
 	{
 		_intervals[(int)note].Register(callback, isOneShot);
 	}
 
-	public void Unregister(NoteValue note, Action callback)
+	public void Unregister(NoteValue note, Action<ConductorEventArgs> callback)
 	{
 		_intervals[(int)note].Unregister(callback);
 	}
@@ -70,26 +80,93 @@ public class Conductor : MonoBehaviour
 			new Interval(NoteValue.Quarter, _bpm),	
 			new Interval(NoteValue.Eighth, _bpm),
 			new Interval(NoteValue.Sixteenth, _bpm),
+			new Interval(NoteValue.ThirtySecond, _bpm),
 		};
+
+		CurrentMeasure = 1;
+		CurrentBeat = 1;
+		CurrentBeatFraction = 0;
+		
+		_intervals[(int)_timeSignature.BeatType].Register(KeepTime);
 	}
 
 	private void Update()
 	{
-		foreach (var interval in _intervals)
+		for (int i = _intervals.Length - 1; i >= 0; i--)
 		{
-			
+			var interval = _intervals[i];
+			float sampledTime = _audioSource.timeSamples/(_audioSource.clip.frequency*interval.GetIntervalLength());
+			interval.CheckForNewInterval(sampledTime);
+
+			if (i == (int)_timeSignature.BeatType)
+			{
+				CurrentBeatFraction = sampledTime%1;
+			}
+		}
+		
+		
+		/*foreach (var interval in _intervals)
+		{
 			float sampledTime = _audioSource.timeSamples/(_audioSource.clip.frequency*interval.GetIntervalLength());
 			interval.CheckForNewInterval(sampledTime);
 		}
+		float sample = (_audioSource.timeSamples/(_audioSource.clip.frequency*_intervals[(int)_timeSignature.BeatType].GetIntervalLength()));
+		CurrentBeatFraction = sample%1 ;*/
 	}
+
+	private void KeepTime(ConductorEventArgs eventArgs)
+	{
+		CurrentBeat++;
+		if (CurrentBeat > _timeSignature.BeatNumber)
+		{
+			CurrentBeat = 1;
+			CurrentMeasure++;
+		}
+	}
+
+	#region structs
+
+	public struct ConductorEventArgs
+    {
+    	public int BarNumber;
+    	public int Beat;
+    	public float BeatFraction;
+
+	    public ConductorEventArgs(int barNumber, int beat, float beatFraction)
+	    {
+		    BarNumber = barNumber;
+		    Beat = beat;
+		    BeatFraction = beatFraction;
+	    }
+    }
+
+	[Serializable]
+	public struct TimeSignature
+	{
+		public int BeatNumber;
+		public NoteValue BeatType;
+
+		public TimeSignature(int beatNumber, NoteValue beatType)
+		{
+			BeatNumber = beatNumber;
+			BeatType = beatType;
+		}
+	}
+
+	#endregion
 	
 	
+	
+	#region  interval
+
+	
+
 	
 	[System.Serializable]
      public class Interval
      {
-	     private Action _action = delegate { };
-	     private Action _oneShots = delegate { };
+	     private Action<ConductorEventArgs> _action = delegate { };
+	     private Action<ConductorEventArgs> _oneShots = delegate { };
 	     private float _value;
      	
      	private int _lastInterval;
@@ -101,7 +178,7 @@ public class Conductor : MonoBehaviour
      		SetIntervalLength(bpm);
         }
 
-        public void Register(Action callback, bool isOneShot = false)
+        public void Register(Action<ConductorEventArgs> callback, bool isOneShot = false)
         {
 
 	        if (isOneShot)
@@ -112,7 +189,7 @@ public class Conductor : MonoBehaviour
 		        _action += callback;
         }
 
-        public void Unregister(Action callback)
+        public void Unregister(Action<ConductorEventArgs> callback)
         {
 	        _action -= callback;
         }
@@ -131,12 +208,14 @@ public class Conductor : MonoBehaviour
 		       if (Mathf.FloorToInt(interval) != _lastInterval)
 		       {
 			       _lastInterval = Mathf.FloorToInt(interval);
-			       _action.Invoke();
-			       _oneShots.Invoke();
+			       _action.Invoke(new ConductorEventArgs(CurrentMeasure,CurrentBeat,CurrentBeatFraction));
+			       _oneShots.Invoke(new ConductorEventArgs(CurrentMeasure,CurrentBeat,CurrentBeatFraction));
 			       _oneShots = delegate { };
 		       } 
      	}
         
      }
+     
+	#endregion
 }
 

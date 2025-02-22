@@ -149,6 +149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9931a1ed6b70d458d062ea07e92b27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _timeSignature:
+    BeatNumber: 8
+    BeatType: 3
   _bpm: 93
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
@@ -164,7 +167,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: b40aa5567814c714188af903eac50451, type: 3}
   m_Resource: {fileID: 8300000, guid: b40aa5567814c714188af903eac50451, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.26
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -300,7 +303,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 200, y: 0}
+  m_AnchoredPosition: {x: 39, y: 10}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &146030697
@@ -622,7 +625,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &535881416
 RectTransform:
   m_ObjectHideFlags: 0
@@ -908,7 +911,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &942339429
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1295,7 +1298,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1826046597
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1497,7 +1500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1858607572
 RectTransform:
   m_ObjectHideFlags: 0
