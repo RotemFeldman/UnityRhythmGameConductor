@@ -1,59 +1,53 @@
-﻿using System;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace DefaultNamespace
+public class Foo : MonoBehaviour,IPointerClickHandler
 {
-	public class Foo : MonoBehaviour,IPointerClickHandler
+	private Vector3 _startSize;
+	private Color _startColor;
+	private Image _spriteRenderer;
+	[SerializeField] private float _sizeDiff;
+	[SerializeField] private Conductor.NoteValue _note; 
+	[SerializeField] private AudioSource _audioClip;
+
+	private void Start()	
 	{
-		private Vector3 startSize;
-		private Color startColor;
-		private Image spriteRenderer;
-		public float sizeDiff;
-		public Conductor.NoteValue note;
-		public AudioSource audioClip;
+		_spriteRenderer = GetComponent<Image>();
+		_startColor = _spriteRenderer.color;
+		_startSize = transform.localScale;
+		Conductor.Instance.Register(_note,Change);
+	}
 
-		private void Start()	
-		{
-			spriteRenderer = GetComponent<Image>();
-			startColor = spriteRenderer.color;
-			startSize = transform.localScale;
-			Conductor.Instance.Register(note,Change);
-		}
+	private void Change(Conductor.ConductorEventArgs args)
+	{
+		//print($"Measure:{args.BarNumber}, Beat:{args.Beat}");
+		transform.localScale =_startSize* _sizeDiff;
+	}
 
-		private void Change(Conductor.ConductorEventArgs args)
-		{
-			//print($"Measure:{args.BarNumber}, Beat:{args.Beat}");
-			transform.localScale =startSize* sizeDiff;
-		}
-
-		private void Update()
-		{
-			var size = Vector3.Lerp(transform.localScale, startSize, Time.deltaTime);
-			transform.localScale = size;
+	private void Update()
+	{
+		var size = Vector3.Lerp(transform.localScale, _startSize, Time.deltaTime*2f);
+		transform.localScale = size;
 			
-			var color = Color.Lerp(spriteRenderer.color, startColor, Time.deltaTime*2f);
-			spriteRenderer.color = color;
-		}
+		var color = Color.Lerp(_spriteRenderer.color, _startColor, Time.deltaTime*2f);
+		_spriteRenderer.color = color;
+	}
 
-		[ContextMenu("Change")]
-		private void ChangeColor()
-		{
-			Conductor.Instance.Register(note,Bar,true);
-		}
+	[ContextMenu("Change")]
+	private void ChangeColor()
+	{
+		Conductor.Instance.Register(_note,Bar,true);
+	}
 		
-		private void Bar(Conductor.ConductorEventArgs args)
-		{
-			spriteRenderer.color = Color.black;
-			audioClip?.Play();
-		}
+	private void Bar(Conductor.ConductorEventArgs args)
+	{
+		_spriteRenderer.color = Color.black;
+		_audioClip?.Play();
+	}
 
-		public void OnPointerClick(PointerEventData eventData)
-		{
-			ChangeColor();
-		}
+	public void OnPointerClick(PointerEventData eventData)
+	{
+		ChangeColor();
 	}
 }

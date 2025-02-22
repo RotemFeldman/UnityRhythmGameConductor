@@ -150,9 +150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeSignature:
-    BeatNumber: 1
-    BeatType: 0
-  _bpm: 60
+    BeatNumber: 4
+    BeatType: 2
+  _bpm: 120
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
 AudioSource:
@@ -330,9 +330,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeDiff: 1.25
-  note: 2
-  audioClip: {fileID: 535881421}
+  _sizeDiff: 1.25
+  _note: 2
+  _audioClip: {fileID: 146030701}
 --- !u!114 &146030699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,9 +669,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeDiff: 1.25
-  note: 4
-  audioClip: {fileID: 535881421}
+  _sizeDiff: 1.25
+  _note: 4
+  _audioClip: {fileID: 535881421}
 --- !u!114 &535881419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,7 +724,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1.2
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -955,9 +955,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeDiff: 1.25
-  note: 1
-  audioClip: {fileID: 535881421}
+  _sizeDiff: 1.25
+  _note: 1
+  _audioClip: {fileID: 942339434}
 --- !u!114 &942339432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1010,7 +1010,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: -0.1
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -1493,9 +1493,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeDiff: 1.25
-  note: 0
-  audioClip: {fileID: 535881421}
+  _sizeDiff: 1.25
+  _note: 0
+  _audioClip: {fileID: 1826046602}
 --- !u!114 &1826046600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1548,7 +1548,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: -0.2
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -1695,9 +1695,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeDiff: 1.25
-  note: 3
-  audioClip: {fileID: 535881421}
+  _sizeDiff: 1.25
+  _note: 3
+  _audioClip: {fileID: 1858607577}
 --- !u!114 &1858607575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1750,7 +1750,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1.1
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
