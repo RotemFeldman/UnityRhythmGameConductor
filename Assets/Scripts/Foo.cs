@@ -14,6 +14,7 @@ namespace DefaultNamespace
 		private Image spriteRenderer;
 		public float sizeDiff;
 		public Conductor.NoteValue note;
+		public AudioSource audioClip;
 
 		private void Start()
 		{
@@ -47,6 +48,7 @@ namespace DefaultNamespace
 		private void Bar()
 		{
 			spriteRenderer.color = Color.black;
+			audioClip?.Play();
 		}
 
 		public void OnPointerClick(PointerEventData eventData)

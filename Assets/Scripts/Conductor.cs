@@ -12,7 +12,14 @@ public class Conductor : MonoBehaviour
 	[SerializeField] private AudioSource _audioSource;
 
 	private Interval[] _intervals;
-
+	private static readonly Dictionary<NoteValue, float> NoteValues = new Dictionary<NoteValue, float>()
+	{
+		{ NoteValue.Whole, 0.25f },
+		{ NoteValue.Half, 0.5f },
+		{ NoteValue.Quarter, 1f },
+		{ NoteValue.Eighth, 2f },
+		{ NoteValue.Sixteenth, 4f },
+	};
 	public enum NoteValue
 	{
 		Whole,
@@ -22,14 +29,7 @@ public class Conductor : MonoBehaviour
 		Sixteenth ,
 	}
 	
-	public static readonly Dictionary<NoteValue, float> NoteValues = new Dictionary<NoteValue, float>()
-	{
-		{ NoteValue.Whole, 0.25f },
-		{ NoteValue.Half, 0.5f },
-		{ NoteValue.Quarter, 1f },
-		{ NoteValue.Eighth, 2f },
-		{ NoteValue.Sixteenth, 4f },
-	};
+	
 
 	public void Register(NoteValue note, Action callback,bool isOneShot = false)
 	{
@@ -39,6 +39,15 @@ public class Conductor : MonoBehaviour
 	public void Unregister(NoteValue note, Action callback)
 	{
 		_intervals[(int)note].Unregister(callback);
+	}
+
+	public void SetBpm(float bpm)
+	{
+		_bpm = bpm;
+		foreach (var interval in _intervals)
+		{
+			interval.SetIntervalLength(bpm);
+		}
 	}
 
 	private void Awake()
@@ -107,7 +116,6 @@ public class Conductor : MonoBehaviour
         {
 	        _action -= callback;
         }
-     	
      
      	public float GetIntervalLength()
         {
