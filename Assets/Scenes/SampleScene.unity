@@ -128,8 +128,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 73872714}
-  - component: {fileID: 73872713}
   - component: {fileID: 73872712}
+  - component: {fileID: 73872713}
   m_Layer: 0
   m_Name: Conductor
   m_TagString: Untagged
@@ -152,7 +152,8 @@ MonoBehaviour:
   _timeSignature:
     BeatNumber: 4
     BeatType: 2
-  _bpm: 120
+  _bpm: 60
+  _offset: 0.02
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
 AudioSource:
@@ -1509,7 +1510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6569245, g: 0, b: 0.9528302, a: 1}
+  m_Color: {r: 0.9193016, g: 0, b: 0.9529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -11,6 +11,7 @@ public class Conductor : MonoBehaviour
 	// user settings
 	[SerializeField] private TimeSignature _timeSignature;
 	[SerializeField] private float _bpm;
+	[SerializeField] private float _offset;
 	[SerializeField] private AudioSource _audioSource;
 
 	//inner working
@@ -97,7 +98,7 @@ public class Conductor : MonoBehaviour
 		for (int i = _intervals.Length - 1; i >= 0; i--)
 		{
 			var interval = _intervals[i];
-			float sampledTime = _audioSource.timeSamples/(_audioSource.clip.frequency*interval.GetIntervalLength());
+			float sampledTime = _audioSource.timeSamples/(_audioSource.clip.frequency*interval.GetIntervalLength()) + _offset;
 			interval.CheckForNewInterval(sampledTime);
 
 			if (i == (int)_timeSignature.BeatType)
