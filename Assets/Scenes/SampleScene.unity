@@ -152,8 +152,8 @@ MonoBehaviour:
   _timeSignature:
     BeatNumber: 4
     BeatType: 2
-  _bpm: 60
-  _offset: 0.02
+  _bpm: 120
+  _offset: 0
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
 AudioSource:
