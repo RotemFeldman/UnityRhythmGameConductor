@@ -6,11 +6,6 @@ using Unity.Collections;
 using UnityEngine;
 using Unity.Jobs;
 
-#if USE_FMOD
-using FMODUnity;
-using FMOD.Studio;
-#endif
-
 [RequireComponent(typeof(AudioSource))]
 public class Conductor : MonoBehaviour
 {
@@ -20,12 +15,6 @@ public class Conductor : MonoBehaviour
     [SerializeField] private float _bpm;
     [SerializeField] private float _offset;
     [SerializeField] private AudioSource _audioSource;
-
-    #if USE_FMOD
-    [SerializeField] private EventReference _fmodEvent;
-    private EventInstance _fmodInstance;
-    private Timeline _fmodTimeline;
-    #endif
 
     private NativeArray<IntervalData> _intervalData;
     private IntervalJob _intervalJob;
@@ -55,8 +44,7 @@ public class Conductor : MonoBehaviour
     private static int CurrentBeat { get; set; }
     private static float CurrentBeatFraction { get; set; }
     private static TimeSignature CurrentTimeSignature { get; set; }
-
-    // Burst-compatible interval data structure
+    
     [BurstCompile]
     private struct IntervalData
     {
@@ -86,19 +74,22 @@ public class Conductor : MonoBehaviour
         }
     }
 
-    private readonly List<Action<ConductorEventArgs>>[] _callbacks;
+     private readonly List<Action<ConductorEventArgs>>[] _callbacks;
     private readonly List<Action<ConductorEventArgs>>[] _oneShots;
+    private readonly List<(Action<ConductorEventArgs> callback, int remainingExecutions, int totalExecutions)>[] _repeatCallbacks;
 
     public Conductor()
     {
         int enumCount = Enum.GetValues(typeof(NoteValue)).Length;
         _callbacks = new List<Action<ConductorEventArgs>>[enumCount];
         _oneShots = new List<Action<ConductorEventArgs>>[enumCount];
+        _repeatCallbacks = new List<(Action<ConductorEventArgs>, int, int)>[enumCount];
         
         for (int i = 0; i < enumCount; i++)
         {
             _callbacks[i] = new List<Action<ConductorEventArgs>>();
             _oneShots[i] = new List<Action<ConductorEventArgs>>();
+            _repeatCallbacks[i] = new List<(Action<ConductorEventArgs>, int, int)>();
         }
     }
 
@@ -108,23 +99,92 @@ public class Conductor : MonoBehaviour
         list.Add(callback);
     }
 
+    public void RegisterRepeating(NoteValue note, Action<ConductorEventArgs> callback, int repetitions)
+    {
+        if (repetitions <= 0)
+        {
+            Debug.LogError("Repetitions must be greater than 0");
+            return;
+        }
+        _repeatCallbacks[(int)note].Add((callback, repetitions, repetitions));
+    }
+
     public void Unregister(NoteValue note, Action<ConductorEventArgs> callback)
     {
         _callbacks[(int)note].Remove(callback);
         _oneShots[(int)note].Remove(callback);
+        _repeatCallbacks[(int)note].RemoveAll(tuple => tuple.callback == callback);
+    }
+
+    private void ProcessIntervals()
+    {
+        for (int i = _intervalData.Length - 1; i >= 0; i--)
+        {
+            if (i == (int)_timeSignature.BeatType)
+            {
+                CurrentBeatFraction = (GetCurrentTime() % _intervalData[i].IntervalLength) /
+                                      _intervalData[i].IntervalLength;
+            }
+
+            var data = _intervalData[i];
+            if (data.HasTriggered)
+            {
+                // Process infinite callbacks
+                var eventArgs = new ConductorEventArgs(CurrentMeasure, CurrentBeat, CurrentBeatFraction,
+                    CurrentTimeSignature);
+                foreach (var callback in _callbacks[i])
+                {
+                    callback(eventArgs);
+                }
+
+                // Process one-shot callbacks
+                foreach (var callback in _oneShots[i])
+                {
+                    callback(eventArgs);
+                }
+
+                _oneShots[i].Clear();
+
+                // Process repeating callbacks
+                for (int j = _repeatCallbacks[i].Count - 1; j >= 0; j--)
+                {
+                    var (callback, remaining, total) = _repeatCallbacks[i][j];
+                    var repeatingEventArgs = new ConductorEventArgs(
+                        CurrentMeasure,
+                        CurrentBeat,
+                        CurrentBeatFraction,
+                        CurrentTimeSignature,
+                        remaining,
+                        total
+                    );
+
+                    callback(repeatingEventArgs);
+
+                    if (remaining > 1)
+                    {
+                        _repeatCallbacks[i][j] = (callback, remaining - 1, total);
+                    }
+                    else
+                    {
+                        _repeatCallbacks[i].RemoveAt(j);
+                    }
+                }
+
+                data.HasTriggered = false;
+                _intervalData[i] = data;
+
+                if (i == (int)_timeSignature.BeatType)
+                {
+                    UpdateTiming();
+                }
+            }
+        }
     }
 
     public void SetBpm(float bpm)
     {
         _bpm = bpm;
         UpdateIntervalLengths();
-        
-        #if USE_FMOD
-        if (_fmodInstance.isValid())
-        {
-            _fmodInstance.setParameterByName("BPM", bpm);
-        }
-        #endif
     }
 
     private void UpdateIntervalLengths()
@@ -144,10 +204,6 @@ public class Conductor : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             InitializeIntervals();
-            
-            #if USE_FMOD
-            InitializeFMOD();
-            #endif
         }
         else
         {
@@ -179,22 +235,10 @@ public class Conductor : MonoBehaviour
         CurrentBeatFraction = 0;
         CurrentTimeSignature = _timeSignature;
     }
-
-    #if USE_FMOD
-    private void InitializeFMOD()
-    {
-        if (!_fmodEvent.IsNull)
-        {
-            _fmodInstance = RuntimeManager.CreateInstance(_fmodEvent);
-            _fmodInstance.start();
-            _fmodInstance.getTimelinePosition(out int timelinePos);
-            _fmodTimeline = new Timeline { position = timelinePos };
-        }
-    }
-    #endif
-
+    
     private void Update()
     {
+        CurrentBeatFraction = GetBeatFraction();
         float currentTime = GetCurrentTime();
         
         // Schedule the interval check job
@@ -209,83 +253,18 @@ public class Conductor : MonoBehaviour
 
         // Process callbacks after job completion
         ProcessIntervals();
-        
-        #if USE_FMOD
-        UpdateFMOD();
-        #endif
     }
 
-    private float GetCurrentTime(int beatType = 0)
+    private float GetCurrentTime(NoteValue beatType = NoteValue.Whole)
     {
-        #if USE_FMOD
-        if (_fmodInstance.isValid())
-        {
-            _fmodInstance.getTimelinePosition(out int timelinePos);
-            return timelinePos / 1000f;
-        }
-        #endif
-        
-        return _audioSource.timeSamples / (_audioSource.clip.frequency * _intervalData[beatType].IntervalLength) + _offset;
+        return _audioSource.timeSamples / (_audioSource.clip.frequency * _intervalData[(int)beatType].IntervalLength) + _offset;
     }
 
-    private void ProcessIntervals()
+    private float GetBeatFraction()
     {
-        var eventArgs = new ConductorEventArgs(CurrentMeasure, CurrentBeat, CurrentBeatFraction, CurrentTimeSignature);
-
-        for (int i = _intervalData.Length -1; i >= 0; i--)
-        {
-            if (i == (int)_timeSignature.BeatType)
-            {
-                CurrentBeatFraction = (GetCurrentTime() % _intervalData[i].IntervalLength) / _intervalData[i].IntervalLength;
-            }
-            
-            var data = _intervalData[i];
-            if (data.HasTriggered)
-            {
-                // Process regular callbacks
-                foreach (var callback in _callbacks[i])
-                {
-                    callback(eventArgs);
-                }
-
-                // Process one-shot callbacks
-                foreach (var callback in _oneShots[i])
-                {
-                    callback(eventArgs);
-                }
-                _oneShots[i].Clear();
-
-                // Reset trigger flag
-                data.HasTriggered = false;
-                _intervalData[i] = data;
-
-                // Update timing if this is the beat type
-                if (i == (int)_timeSignature.BeatType)
-                {
-                    UpdateTiming();
-                    
-                }
-            }
-            
-            
-            
-        }
+        int i = (int)_timeSignature.BeatType;
+        return (GetCurrentTime() % _intervalData[i].IntervalLength) / _intervalData[i].IntervalLength;
     }
-
-    #if USE_FMOD
-    private void UpdateFMOD()
-    {
-        if (_fmodInstance.isValid())
-        {
-            _fmodInstance.getTimelinePosition(out int timelinePos);
-            if (timelinePos != _fmodTimeline.position)
-            {
-                _fmodTimeline.position = timelinePos;
-                // Additional FMOD-specific timing updates can be added here
-            }
-        }
-    }
-    #endif
 
     private void UpdateTiming()
     {
@@ -303,14 +282,6 @@ public class Conductor : MonoBehaviour
         {
             _intervalData.Dispose();
         }
-
-        #if USE_FMOD
-        if (_fmodInstance.isValid())
-        {
-            _fmodInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            _fmodInstance.release();
-        }
-        #endif
     }
 
     #region Structs
@@ -338,7 +309,6 @@ public class Conductor : MonoBehaviour
             RemainingExecutions = remainingExecutions;
             TotalExecutions = totalExecutions;
         }
-		
 
         public float ExecutionProgress => TotalExecutions == -1 ? 0 : 1f - ((float)RemainingExecutions / TotalExecutions);
     }

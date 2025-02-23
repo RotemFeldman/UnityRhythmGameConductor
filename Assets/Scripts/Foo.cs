@@ -38,7 +38,7 @@ public class Foo : MonoBehaviour,IPointerClickHandler
 	[ContextMenu("Change")]
 	private void ChangeColor()
 	{
-		Conductor.Instance.Register(_note,Bar,true);
+		Conductor.Instance.RegisterRepeating(_note,Bar,4);
 	}
 		
 	private void Bar(Conductor.ConductorEventArgs args)
