@@ -152,7 +152,7 @@ MonoBehaviour:
   _timeSignature:
     BeatNumber: 4
     BeatType: 2
-  _bpm: 120
+  _bpm: 60
   _offset: 0
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
@@ -331,6 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 4
   _sizeDiff: 1.25
   _note: 2
   _audioClip: {fileID: 146030701}
@@ -670,6 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 16
   _sizeDiff: 1.25
   _note: 4
   _audioClip: {fileID: 535881421}
@@ -956,6 +958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 2
   _sizeDiff: 1.25
   _note: 1
   _audioClip: {fileID: 942339434}
@@ -1494,6 +1497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 1
   _sizeDiff: 1.25
   _note: 0
   _audioClip: {fileID: 1826046602}
@@ -1696,6 +1700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 8
   _sizeDiff: 1.25
   _note: 3
   _audioClip: {fileID: 1858607577}

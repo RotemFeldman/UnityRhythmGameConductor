@@ -215,7 +215,7 @@ public class Conductor : MonoBehaviour
         #endif
     }
 
-    private float GetCurrentTime()
+    private float GetCurrentTime(int beatType = 0)
     {
         #if USE_FMOD
         if (_fmodInstance.isValid())
@@ -225,15 +225,20 @@ public class Conductor : MonoBehaviour
         }
         #endif
         
-        return _audioSource.timeSamples / (_audioSource.clip.frequency * _intervalData[0].IntervalLength) + _offset;
+        return _audioSource.timeSamples / (_audioSource.clip.frequency * _intervalData[beatType].IntervalLength) + _offset;
     }
 
     private void ProcessIntervals()
     {
         var eventArgs = new ConductorEventArgs(CurrentMeasure, CurrentBeat, CurrentBeatFraction, CurrentTimeSignature);
 
-        for (int i = 0; i < _intervalData.Length; i++)
+        for (int i = _intervalData.Length -1; i >= 0; i--)
         {
+            if (i == (int)_timeSignature.BeatType)
+            {
+                CurrentBeatFraction = GetCurrentTime(i) % 1;
+            }
+            
             var data = _intervalData[i];
             if (data.HasTriggered)
             {
@@ -258,8 +263,12 @@ public class Conductor : MonoBehaviour
                 if (i == (int)_timeSignature.BeatType)
                 {
                     UpdateTiming();
+                    
                 }
             }
+            
+            
+            
         }
     }
 
@@ -311,14 +320,27 @@ public class Conductor : MonoBehaviour
         public readonly int Beat;
         public readonly float BeatFraction;
         public readonly TimeSignature TimeSignature;
+        public readonly int RemainingExecutions;  // -1 for infinite events
+        public readonly int TotalExecutions;      // -1 for infinite events
 
-        public ConductorEventArgs(int barNumber, int beat, float beatFraction, TimeSignature timeSignature)
+        public ConductorEventArgs(
+            int barNumber, 
+            int beat, 
+            float beatFraction, 
+            TimeSignature timeSignature,
+            int remainingExecutions = -1,
+            int totalExecutions = -1)
         {
             BarNumber = barNumber;
             Beat = beat;
             BeatFraction = beatFraction;
             TimeSignature = timeSignature;
+            RemainingExecutions = remainingExecutions;
+            TotalExecutions = totalExecutions;
         }
+		
+
+        public float ExecutionProgress => TotalExecutions == -1 ? 0 : 1f - ((float)RemainingExecutions / TotalExecutions);
     }
 
     [Serializable]
