@@ -1187,7 +1187,7 @@ GameObject:
   - component: {fileID: 1526154199}
   - component: {fileID: 1526154198}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: InputChecker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1208,7 +1208,7 @@ MonoBehaviour:
   perfectWindow: 0.08
   greatWindow: 0.13
   goodWindow: 0.2
-  beatToTrack: 3
+  beatToTrack: 2
 --- !u!4 &1526154199
 Transform:
   m_ObjectHideFlags: 0
@@ -1233,9 +1233,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1538472301}
+  - component: {fileID: 1538472302}
   - component: {fileID: 1538472304}
   - component: {fileID: 1538472303}
-  - component: {fileID: 1538472302}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1274,7 +1274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f01122502eea33345958f658e86cbbf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 1538472303}
+  Text: {fileID: 1538472303}
 --- !u!114 &1538472303
 MonoBehaviour:
   m_ObjectHideFlags: 0
