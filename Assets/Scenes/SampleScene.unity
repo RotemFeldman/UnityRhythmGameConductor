@@ -149,8 +149,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9931a1ed6b70d458d062ea07e92b27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _timeSignature:
+    BeatNumber: 4
+    BeatType: 2
   _bpm: 93
-  _offset: 0.02
+  _offset: 0
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
 AudioSource:
@@ -328,6 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: quarter
   _sizeDiff: 1.25
   _repeat: 4
   _note: 2
@@ -668,6 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: sixteenth
   _sizeDiff: 1.25
   _repeat: 8
   _note: 4
@@ -955,6 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: half
   _sizeDiff: 1.25
   _repeat: 2
   _note: 1
@@ -1494,6 +1500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: whole
   _sizeDiff: 1.25
   _repeat: 1
   _note: 0
@@ -1697,6 +1704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1738f4f6a6a54c35a12b903f7d35ce82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: eighth
   _sizeDiff: 1.25
   _repeat: 6
   _note: 3

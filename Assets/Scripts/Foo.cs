@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Foo : MonoBehaviour,IPointerClickHandler
 {
+	[FormerlySerializedAs("name")] public string Name;
 	private Vector3 _startSize;
 	private Color _startColor;
 	private Image _spriteRenderer;
@@ -22,7 +24,7 @@ public class Foo : MonoBehaviour,IPointerClickHandler
 
 	private void Change(Conductor.ConductorEventArgs args)
 	{
-		//print($"Measure:{args.BarNumber}, Beat:{args.Beat}");
+		print($"{Name} -- Measure:{args.BarNumber}, Beat:{args.Beat}, Fraction:{args.BeatFraction}");
 		transform.localScale =_startSize* _sizeDiff;
 	}
 

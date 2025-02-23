@@ -47,7 +47,6 @@ public class Conductor : MonoBehaviour
 	private static float CurrentBeatFraction {get; set;}
 	private static TimeSignature CurrentTimeSignature {get; set;}
 	
-	
 
 	// -1 repeats is infinite
 	public void Register(NoteValue note, Action<ConductorEventArgs> callback,int timesToRepeat = -1)
@@ -60,7 +59,7 @@ public class Conductor : MonoBehaviour
 		_intervals[(int)note].Unregister(callback);
 	}
 
-	public void SetBpm(float bpm)
+	public void SetBpm(float bpm)zs
 	{
 		_bpm = bpm;
 		foreach (var interval in _intervals)
@@ -102,27 +101,32 @@ public class Conductor : MonoBehaviour
 
 	private void Update()
 	{
+    
 		for (int i = _intervals.Length - 1; i >= 0; i--)
 		{
 			var interval = _intervals[i];
-			float sampledTime = _audioSource.timeSamples/(_audioSource.clip.frequency*interval.GetIntervalLength()) + _offset;
+			float sampledTime = _audioSource.timeSamples/((float)_audioSource.clip.frequency*_intervals[i].GetIntervalLength()) + _offset; 
 			interval.CheckForIntervalElapsed(sampledTime);
 
 			if (i == (int)_timeSignature.BeatType)
 			{
-				CurrentBeatFraction = sampledTime%1;
+				CurrentBeatFraction = sampledTime % 1;
 			}
 		}
-		
 	}
 
-	private void KeepTime(ConductorEventArgs eventArgs)
+	private void KeepTime(ConductorEventArgs conductorEventArgs)
 	{
-		CurrentBeat++;
-		if (CurrentBeat > _timeSignature.BeatNumber)
+		var beatInterval = _intervals[(int)_timeSignature.BeatType];
+		if (beatInterval.HasTriggeredThisFrame)
 		{
-			CurrentBeat = 1;
-			CurrentMeasure++;
+			CurrentBeat++;
+			if (CurrentBeat > _timeSignature.BeatNumber)
+			{
+				CurrentBeat = 1;
+				CurrentMeasure++;
+			}
+			beatInterval.HasTriggeredThisFrame = false;
 		}
 	}
 
@@ -142,8 +146,8 @@ public class Conductor : MonoBehaviour
 			int beat, 
 			float beatFraction, 
 			TimeSignature timeSignature,
-			int remainingExecutions,
-			int totalExecutions)
+			int remainingExecutions = -1,
+			int totalExecutions = -1)
 		{
 			BarNumber = barNumber;
 			Beat = beat;
@@ -153,13 +157,14 @@ public class Conductor : MonoBehaviour
 			TotalExecutions = totalExecutions;
 		}
 		
+
 		public float ExecutionProgress => TotalExecutions == -1 ? 0 : 1f - ((float)RemainingExecutions / TotalExecutions);
 	}
 	[Serializable]
-	public readonly struct TimeSignature
+	public struct TimeSignature
 	{
-		public readonly int BeatNumber;
-		public readonly NoteValue BeatType;
+		public int BeatNumber;
+		public NoteValue BeatType;
 
 		public TimeSignature(int beatNumber, NoteValue beatType)
 		{
@@ -175,130 +180,149 @@ public class Conductor : MonoBehaviour
 	#region  interval
 	
      public class Interval
-{
-    private Action<ConductorEventArgs> _action = delegate { };
-    
-    private class TimedEvent
-    {
-        public Action<ConductorEventArgs> Callback { get; set; }
-        public int RemainingExecutions { get; set; }
-        public int TotalExecutions { get; set; }
-        public bool IsActive { get; set; } = true;
-    }
-    
-    private List<TimedEvent> _timedEvents = new List<TimedEvent>();
-    
-    private float _value;
-    private int _lastInterval;
-    private float _intervalLength;
+	{
+		public bool HasTriggeredThisFrame { get; set; }
+	    private Action<ConductorEventArgs> _action = delegate { };
+	    
+	    private class TimedEvent
+	    {
+	        public Action<ConductorEventArgs> Callback { get; set; }
+	        public int RemainingExecutions { get; set; }
+	        public int TotalExecutions { get; set; }
+	        public bool IsActive { get; set; } = true;
+	    }
+	    
+	    private List<TimedEvent> _timedEvents = new List<TimedEvent>();
+	    
+	    private float _value;
+	    private int _lastInterval;
+	    private float _intervalLength;
 
-    public Interval(NoteValue value, float bpm)
-    {
-        Conductor.NoteValues.TryGetValue(value, out _value);
-        SetIntervalLength(bpm);
-    }
+	    public Interval(NoteValue value, float bpm)
+	    {
+	        Conductor.NoteValues.TryGetValue(value, out _value);
+	        SetIntervalLength(bpm);
+	    }
 
-    public void Register(Action<ConductorEventArgs> callback, int executionCount = -1)
-    {
-        if (executionCount == -1)
-        {
-            _action += callback;
-        }
-        else if (executionCount > 0)
-        {
-            _timedEvents.Add(new TimedEvent 
-            { 
-                Callback = callback,
-                RemainingExecutions = executionCount,
-                TotalExecutions = executionCount
-            });
-        }
-    }
+	    public void Register(Action<ConductorEventArgs> callback, int executionCount = -1)
+	    {
+	        if (executionCount == -1)
+	        {
+	            _action += callback;
+	        }
+	        else if (executionCount > 0)
+	        {
+	            _timedEvents.Add(new TimedEvent 
+	            { 
+	                Callback = callback,
+	                RemainingExecutions = executionCount,
+	                TotalExecutions = executionCount
+	            });
+	        }
+	    }
 
-    public void RegisterOneShot(Action<ConductorEventArgs> callback)
-    {
-        Register(callback, 1);
-    }
+	    public void RegisterOneShot(Action<ConductorEventArgs> callback)
+	    {
+	        Register(callback, 1);
+	    }
 
-    public void Unregister(Action<ConductorEventArgs> callback)
-    {
-        _action -= callback;
-        
-        foreach (var timedEvent in _timedEvents)
-        {
-            if (timedEvent.Callback == callback)
-            {
-                timedEvent.IsActive = false;
-            }
-        }
-    }
+	    public void Unregister(Action<ConductorEventArgs> callback)
+	    {
+	        _action -= callback;
+	        
+	        foreach (var timedEvent in _timedEvents)
+	        {
+	            if (timedEvent.Callback == callback)
+	            {
+	                timedEvent.IsActive = false;
+	            }
+	        }
+	    }
 
-    public float GetIntervalLength()
-    {
-        return _intervalLength;
-    }
+	    public float GetIntervalLength()
+	    {
+	        return _intervalLength;
+	    }
 
-    public void SetIntervalLength(float bpm)
-    {
-        _intervalLength = 60f / (bpm * _value);
-    }
+	    public void SetIntervalLength(float bpm)
+	    {
+	        _intervalLength = 60f / (bpm * _value);
+	    }
 
-    public void CheckForIntervalElapsed(float interval)
-    {
-        if (Mathf.FloorToInt(interval) != _lastInterval)
-        {
-            _lastInterval = Mathf.FloorToInt(interval);
-            
-            var baseEventArgs = new ConductorEventArgs(
-                Conductor.CurrentMeasure,
-                Conductor.CurrentBeat,
-                Conductor.CurrentBeatFraction,
-                Conductor.CurrentTimeSignature,
-                -1,  
-                -1   
-            );
-            
-            _action.Invoke(baseEventArgs);
-            ProcessTimedEvents();
-        }
-    }
+	    public void CheckForIntervalElapsed(float interval)
+	    {
+		    int currentInterval = Mathf.FloorToInt(interval);
+		    if (currentInterval != _lastInterval)
+		    {
+			    _lastInterval = currentInterval;
+			    HasTriggeredThisFrame = true;
+                
+			    var eventArgs = new ConductorEventArgs(
+				    CurrentMeasure,
+				    CurrentBeat,
+				    CurrentBeatFraction,
+				    CurrentTimeSignature
+			    );
+                
+			    _action.Invoke(eventArgs);
+			    ProcessTimedEvents();
+		    }
+		    
+	        /*if (Mathf.FloorToInt(interval) != _lastInterval)
+	        {
+	            _lastInterval = Mathf.FloorToInt(interval);
+	            
+	            var baseEventArgs = new ConductorEventArgs(
+	                Conductor.CurrentMeasure,
+	                Conductor.CurrentBeat,
+	                Conductor.CurrentBeatFraction,
+	                Conductor.CurrentTimeSignature,
+	                -1,  
+	                -1   
+	            );
+	            
+			            _action.Invoke(baseEventArgs);
+	            ProcessTimedEvents();
+	        }*/
+	        
+	    }
 
-    private void ProcessTimedEvents()
-    {
-        List<TimedEvent> completedEvents = new List<TimedEvent>();
+	    private void ProcessTimedEvents()
+	    {
+	        List<TimedEvent> completedEvents = new List<TimedEvent>();
 
-        foreach (var timedEvent in _timedEvents)
-        {
-            if (!timedEvent.IsActive) 
-            {
-                completedEvents.Add(timedEvent);
-                continue;
-            }
-            
-            var eventArgs = new ConductorEventArgs(
-                Conductor.CurrentMeasure,
-                Conductor.CurrentBeat,
-                Conductor.CurrentBeatFraction,
-                Conductor.CurrentTimeSignature,
-                timedEvent.RemainingExecutions,
-                timedEvent.TotalExecutions
-            );
+	        foreach (var timedEvent in _timedEvents)
+	        {
+	            if (!timedEvent.IsActive) 
+	            {
+	                completedEvents.Add(timedEvent);
+	                continue;
+	            }
+	            
+	            var eventArgs = new ConductorEventArgs(
+	                Conductor.CurrentMeasure,
+	                Conductor.CurrentBeat,
+	                Conductor.CurrentBeatFraction,
+	                Conductor.CurrentTimeSignature,
+	                timedEvent.RemainingExecutions,
+	                timedEvent.TotalExecutions
+	            );
 
-            timedEvent.Callback(eventArgs);
-            timedEvent.RemainingExecutions--;
+	            timedEvent.Callback(eventArgs);
+	            timedEvent.RemainingExecutions--;
 
-            if (timedEvent.RemainingExecutions <= 0)
-            {
-                completedEvents.Add(timedEvent);
-            }
-        }
+	            if (timedEvent.RemainingExecutions <= 0)
+	            {
+	                completedEvents.Add(timedEvent);
+	            }
+	        }
 
-        foreach (var completed in completedEvents)
-        {
-            _timedEvents.Remove(completed);
-        }
-    }
-}
+	        foreach (var completed in completedEvents)
+	        {
+	            _timedEvents.Remove(completed);
+	        }
+	    }
+	}
 
      
 	#endregion
