@@ -40,10 +40,11 @@ public class Conductor : MonoBehaviour
         ThirtySecond,
     }
 
-    private static int CurrentMeasure { get; set; }
-    private static int CurrentBeat { get; set; }
-    private static float CurrentBeatFraction { get; set; }
-    private static TimeSignature CurrentTimeSignature { get; set; }
+    public int CurrentMeasure { get;private set; }
+    public int CurrentBeat { get;private set; }
+    public float CurrentBeatFraction { get; private set; }
+    public float Bpm { get; private set; }
+    public TimeSignature CurrentTimeSignature { get; private set; }
     
     [BurstCompile]
     private struct IntervalData
@@ -115,6 +116,8 @@ public class Conductor : MonoBehaviour
         _oneShots[(int)note].Remove(callback);
         _repeatCallbacks[(int)note].RemoveAll(tuple => tuple.callback == callback);
     }
+    
+    
 
     private void ProcessIntervals()
     {
@@ -234,6 +237,7 @@ public class Conductor : MonoBehaviour
         CurrentBeat = 1;
         CurrentBeatFraction = 0;
         CurrentTimeSignature = _timeSignature;
+        Bpm = _bpm;
     }
     
     private void Update()

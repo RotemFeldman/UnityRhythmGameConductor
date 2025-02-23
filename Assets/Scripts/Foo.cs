@@ -22,7 +22,7 @@ public class Foo : MonoBehaviour,IPointerClickHandler
 
 	private void Change(Conductor.ConductorEventArgs args)
 	{
-		print($"{Name} -- Measure:{args.BarNumber}, Beat:{args.Beat}, Fraction: {args.BeatFraction}");
+		//print($"{Name} -- Measure:{args.BarNumber}, Beat:{args.Beat}, Fraction: {args.BeatFraction}");
 		transform.localScale =_startSize* _sizeDiff;
 	}
 
