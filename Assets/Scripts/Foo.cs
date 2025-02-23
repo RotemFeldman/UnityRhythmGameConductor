@@ -8,6 +8,7 @@ public class Foo : MonoBehaviour,IPointerClickHandler
 	private Color _startColor;
 	private Image _spriteRenderer;
 	[SerializeField] private float _sizeDiff;
+	[SerializeField] private int _repeat = 1;
 	[SerializeField] private Conductor.NoteValue _note; 
 	[SerializeField] private AudioSource _audioClip;
 
@@ -37,7 +38,7 @@ public class Foo : MonoBehaviour,IPointerClickHandler
 	[ContextMenu("Change")]
 	private void ChangeColor()
 	{
-		Conductor.Instance.Register(_note,Bar,true);
+		Conductor.Instance.Register(_note,Bar,_repeat);
 	}
 		
 	private void Bar(Conductor.ConductorEventArgs args)

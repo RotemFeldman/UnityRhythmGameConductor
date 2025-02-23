@@ -149,10 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9931a1ed6b70d458d062ea07e92b27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeSignature:
-    BeatNumber: 4
-    BeatType: 2
-  _bpm: 60
+  _bpm: 93
   _offset: 0.02
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
@@ -165,8 +162,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6e262082893f619498303e02aa9dfe0e, type: 3}
-  m_Resource: {fileID: 8300000, guid: 6e262082893f619498303e02aa9dfe0e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b40aa5567814c714188af903eac50451, type: 3}
+  m_Resource: {fileID: 8300000, guid: b40aa5567814c714188af903eac50451, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.26
   m_Pitch: 1
@@ -332,6 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sizeDiff: 1.25
+  _repeat: 4
   _note: 2
   _audioClip: {fileID: 146030701}
 --- !u!114 &146030699
@@ -382,8 +380,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
-  m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -671,6 +669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sizeDiff: 1.25
+  _repeat: 8
   _note: 4
   _audioClip: {fileID: 535881421}
 --- !u!114 &535881419
@@ -721,8 +720,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
-  m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -957,6 +956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sizeDiff: 1.25
+  _repeat: 2
   _note: 1
   _audioClip: {fileID: 942339434}
 --- !u!114 &942339432
@@ -1007,8 +1007,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
-  m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1495,6 +1495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sizeDiff: 1.25
+  _repeat: 1
   _note: 0
   _audioClip: {fileID: 1826046602}
 --- !u!114 &1826046600
@@ -1545,8 +1546,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
-  m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1697,6 +1698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sizeDiff: 1.25
+  _repeat: 6
   _note: 3
   _audioClip: {fileID: 1858607577}
 --- !u!114 &1858607575
@@ -1747,8 +1749,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
-  m_Resource: {fileID: 8300000, guid: 752aeead7cc02584b99fefb31d77fc08, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1edaebc7fa42f3d4d9af21880496e7a9, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
