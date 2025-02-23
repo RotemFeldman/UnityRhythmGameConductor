@@ -12,8 +12,9 @@ public class Text : MonoBehaviour
     {
         Conductor.Instance.Register(Conductor.NoteValue.ThirtySecond,(args =>
         {
-            text.text= $"Bar:{args.BarNumber}, Beat:{args.Beat}, BeatFraction:{args.BeatFraction.ToString().Truncate(3,String.Empty) }, {i}";
-            i++;
+            text.text = Conductor.Instance.GetSpecificBeatFraction(Conductor.NoteValue.Quarter).ToString();
+            //text.text= $"Bar:{args.BarNumber}, Beat:{args.Beat}, BeatFraction:{args.BeatFraction.ToString().Truncate(3,String.Empty) }, {i}";
+            //i++;
         } ));
     }
 }

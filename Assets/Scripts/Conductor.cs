@@ -270,6 +270,11 @@ public class Conductor : MonoBehaviour
         return (GetCurrentTime() % _intervalData[i].IntervalLength) / _intervalData[i].IntervalLength;
     }
 
+    public float GetSpecificBeatFraction(NoteValue beatType)
+    {
+        return (GetCurrentTime() % _intervalData[(int)beatType].IntervalLength) / _intervalData[(int)beatType].IntervalLength;
+    }
+
     private void UpdateTiming()
     {
         CurrentBeat++;

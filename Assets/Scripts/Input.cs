@@ -1,3 +1,4 @@
+/*
 using UnityEngine;
 
 public class Input : MonoBehaviour
@@ -9,7 +10,7 @@ public class Input : MonoBehaviour
         scorer = GetComponent<RhythmScorer>();
         
         // Register a note at beat 2
-        scorer.RegisterNoteTarget(2, score =>
+        scorer.RegisterNoteTarget(1, score =>
         {
             switch (score)
             {
@@ -28,3 +29,4 @@ public class Input : MonoBehaviour
         });
     }
 }
+*/
