@@ -236,7 +236,7 @@ public class Conductor : MonoBehaviour
         {
             if (i == (int)_timeSignature.BeatType)
             {
-                CurrentBeatFraction = GetCurrentTime(i) % 1;
+                CurrentBeatFraction = (GetCurrentTime() % _intervalData[i].IntervalLength) / _intervalData[i].IntervalLength;
             }
             
             var data = _intervalData[i];
