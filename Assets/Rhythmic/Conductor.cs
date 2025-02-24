@@ -197,7 +197,8 @@ namespace Rhythmic
             for (int i = 0; i < _intervalData.Length; i++)
             {
                 var data = _intervalData[i];
-                data.IntervalLength = 60f / (_bpm * data.Value);
+                // Interval length is now in beats
+                data.IntervalLength = 1f / data.Value;
                 _intervalData[i] = data;
             }
         }
@@ -229,7 +230,7 @@ namespace Rhythmic
                 _intervalData[i] = new IntervalData
                 {
                     Value = value,
-                    IntervalLength = 60f / (_bpm * value),
+                    IntervalLength = 1f / value, // Interval length in beats
                     LastInterval = -1,
                     HasTriggered = false
                 };
@@ -263,18 +264,29 @@ namespace Rhythmic
 
         private float GetCurrentTime(NoteValue beatType = NoteValue.Whole)
         {
-            return _audioSource.timeSamples / (_audioSource.clip.frequency * _intervalData[(int)beatType].IntervalLength) + _offset;
+            // Calculate samples per beat
+            float samplesPerBeat = (_audioSource.clip.frequency * 60f) / _bpm;
+            
+            // Convert current sample position to beat position
+            float beatPosition = _audioSource.timeSamples / samplesPerBeat;
+            
+            // Apply offset in beats
+            beatPosition += _offset;
+            
+            return beatPosition;
         }
 
         private float GetBeatFraction()
         {
             int i = (int)_timeSignature.BeatType;
-            return (GetCurrentTime() % _intervalData[i].IntervalLength) / _intervalData[i].IntervalLength;
+            float beatPosition = GetCurrentTime();
+            return beatPosition % _intervalData[i].IntervalLength / _intervalData[i].IntervalLength;
         }
 
-        public float GetSpecificBeatFraction(NoteValue beatType)
+        public float GetBeatFraction(NoteValue beatType)
         {
-            return (GetCurrentTime() % _intervalData[(int)beatType].IntervalLength) / _intervalData[(int)beatType].IntervalLength;
+            float beatPosition = GetCurrentTime();
+            return beatPosition % _intervalData[(int)beatType].IntervalLength / _intervalData[(int)beatType].IntervalLength;
         }
 
         private void UpdateTiming()

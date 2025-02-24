@@ -152,7 +152,7 @@ MonoBehaviour:
   _timeSignature:
     BeatNumber: 4
     BeatType: 2
-  _bpm: 120
+  _bpm: 93
   _offset: 0
   _audioSource: {fileID: 73872713}
 --- !u!82 &73872713
@@ -165,8 +165,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6e262082893f619498303e02aa9dfe0e, type: 3}
-  m_Resource: {fileID: 8300000, guid: 6e262082893f619498303e02aa9dfe0e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b40aa5567814c714188af903eac50451, type: 3}
+  m_Resource: {fileID: 8300000, guid: b40aa5567814c714188af903eac50451, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.26
   m_Pitch: 1
@@ -334,7 +334,6 @@ MonoBehaviour:
   Name: 4
   _sizeDiff: 1.4
   _note: 2
-  _audioClip: {fileID: 146030701}
 --- !u!114 &146030699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -674,7 +673,6 @@ MonoBehaviour:
   Name: 16
   _sizeDiff: 1.4
   _note: 4
-  _audioClip: {fileID: 535881421}
 --- !u!114 &535881419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -961,7 +959,6 @@ MonoBehaviour:
   Name: 2
   _sizeDiff: 1.4
   _note: 1
-  _audioClip: {fileID: 942339434}
 --- !u!114 &942339432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1548,7 +1545,6 @@ MonoBehaviour:
   Name: 1
   _sizeDiff: 1.4
   _note: 0
-  _audioClip: {fileID: 1826046602}
 --- !u!114 &1826046600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1751,7 +1747,6 @@ MonoBehaviour:
   Name: 8
   _sizeDiff: 1.4
   _note: 3
-  _audioClip: {fileID: 1858607577}
 --- !u!114 &1858607575
 MonoBehaviour:
   m_ObjectHideFlags: 0

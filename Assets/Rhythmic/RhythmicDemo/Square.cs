@@ -10,15 +10,15 @@ namespace Demo
 		public string Name;
 		private Vector3 _startSize;
 		private Color _startColor;
-		private Image _spriteRenderer;
+		//private Image _spriteRenderer;
 		[SerializeField] private float _sizeDiff;
 		[SerializeField] private Conductor.NoteValue _note; 
-		[SerializeField] private AudioSource _audioClip;
+		//[SerializeField] private AudioSource _audioClip;
 
 		private void Start()	
 		{
-			_spriteRenderer = GetComponent<Image>();
-			_startColor = _spriteRenderer.color;
+			//_spriteRenderer = GetComponent<Image>();
+			//_startColor = _spriteRenderer.color;
 			_startSize = transform.localScale;
 			Conductor.Instance.Register(_note,Change);
 		}
@@ -31,11 +31,11 @@ namespace Demo
 
 		private void Update()
 		{
-			var size = Vector3.Lerp(transform.localScale, _startSize, Time.deltaTime*2f);
+			var size = Vector3.Lerp(transform.localScale, _startSize, Time.deltaTime*10f);
 			transform.localScale = size;
 			
-			var color = Color.Lerp(_spriteRenderer.color, _startColor, Time.deltaTime*2f);
-			_spriteRenderer.color = color;
+			//var color = Color.Lerp(_spriteRenderer.color, _startColor, Time.deltaTime*2f);
+			//_spriteRenderer.color = color;
 		}
 
 		[ContextMenu("Change")]
@@ -46,8 +46,8 @@ namespace Demo
 		
 		private void Bar(Conductor.ConductorEventArgs args)
 		{
-			_spriteRenderer.color = Color.black;
-			_audioClip?.Play();
+			//_spriteRenderer.color = Color.black;
+			//_audioClip?.Play();
 		}
 
 		public void OnPointerClick(PointerEventData eventData)

@@ -24,7 +24,7 @@ namespace Demo
 
         private void Update()
         {
-            beatFrac = Conductor.Instance.GetSpecificBeatFraction(beatToTrack);
+            beatFrac = Conductor.Instance.GetBeatFraction(beatToTrack);
 
             if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
             {
