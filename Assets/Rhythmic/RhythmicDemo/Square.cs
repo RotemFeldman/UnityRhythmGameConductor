@@ -20,7 +20,7 @@ namespace Demo
 			//_spriteRenderer = GetComponent<Image>();
 			//_startColor = _spriteRenderer.color;
 			_startSize = transform.localScale;
-			Conductor.Instance.Register(_note,Change);
+			Conductor.Instance.Register(_note, Change);
 		}
 
 		private void Change(Conductor.ConductorEventArgs args)
